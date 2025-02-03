@@ -24,9 +24,7 @@ ENV MINIO_ACCESS_KEY_FILE=access_key \
 
 COPY binary/minio /usr/bin/minio
 
-COPY skel/etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY skel/usr/bin/mc /usr/bin/mc
-COPY skel/usr/bin/docker-entrypoint.sh /usr/bin/docker-entrypoint.sh
+COPY skel/ /
 
 COPY CREDITS /licenses/CREDITS
 COPY LICENSE /licenses/LICENSE
