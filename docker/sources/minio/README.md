@@ -15,8 +15,35 @@ This script automates the process of fetching the latest Minio binary, verifying
 To check for a new version of Minio and perform the above actions, simply run:
 
 ```sh
-./fetch_minio.sh
+cd binary &&  ./fetch_minio.sh && cd .. && docker run -it -p9000:9000 -p36553:36553 gdsk:minio server ~/.docker-minio
 ```
+
+## Execution example
+
+```sh
+pwebster@ubuntu:~/work/GDSK/docker/sources/minio$ docker run -it gdsk:minio server /home/shared
+INFO: Formatting 1st pool, 1 set(s), 1 drives per set.
+INFO: WARNING: Host local has more than 0 drives of set. A host failure will result in data becoming unavailable.
+MinIO Object Storage Server
+Copyright: 2015-2025 MinIO, Inc.
+License: GNU AGPLv3 - https://www.gnu.org/licenses/agpl-3.0.html
+Version: RELEASE.2025-01-20T14-49-07Z (go1.23.5 linux/amd64)
+
+API: http://172.17.0.4:9000  http://127.0.0.1:9000 
+   RootUser: minioadmin 
+   RootPass: minioadmin 
+
+WebUI: http://172.17.0.4:36553 http://127.0.0.1:36553  
+   RootUser: minioadmin 
+   RootPass: minioadmin 
+
+CLI: https://min.io/docs/minio/linux/reference/minio-mc.html#quickstart
+   $ mc alias set 'myminio' 'http://172.17.0.4:9000' 'minioadmin' 'minioadmin'
+
+Docs: https://docs.min.io
+WARN: Detected default credentials 'minioadmin:minioadmin', we recommend that you change these values with 'MINIO_ROOT_USER' and 'MINIO_ROOT_PASSWORD' environment variables
+```
+
 
 ## Requirements
 
