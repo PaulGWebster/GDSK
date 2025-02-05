@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Make sure all base diretories are present
+mkdir -p fragments base
+
 # Check if a version argument is provided, otherwise use 'latest'
 VERSION=${1:-latest}
 
