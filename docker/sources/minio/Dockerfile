@@ -1,3 +1,12 @@
+FROM node:latest
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install
+COPY index.js ./
+COPY swagger.yaml ./
+EXPOSE 9001
+CMD ["npm", "start"]
+
 # Use the specified base image
 FROM osbase:latest
 
