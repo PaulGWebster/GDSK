@@ -3,10 +3,20 @@
 # Check if a version argument is provided, otherwise use 'latest'
 VERSION=${1:-latest}
 
-# Pull the Docker image
-if ! docker pull amd64/alpine:${VERSION}; then
-    echo "Error: Version ${VERSION} not found."
-    exit 1
+# Check for internet connectivity
+if ping -c1 -w5 8.8.8.8 &> /dev/null; then
+    # Pull the Docker image
+    if ! docker pull amd64/alpine:${VERSION}; then
+        echo "Error: Version ${VERSION} not found."
+        exit 1
+    fi
+else
+    echo "No internet connection. Using local fragments."
+    VERSION=$(ls base/alpine-*.tar 2>/dev/null | sed -e 's/base\/alpine-\(.*\)\.tar/\1/' | sort -V | tail -n 1)
+    if [ -z "$VERSION" ]; then
+        echo "Cannot proceed, no cached records"
+        exit 1
+    fi
 fi
 
 # Determine the actual version for 'latest'
@@ -44,4 +54,6 @@ echo "Latest tarball: ${LATESTIMAGE}"
 
 # Finally create a real parh/type:version
 IMAGENAME=$(echo ${LATESTIMAGE} | cut -d ':' -f 1)
-docker tag amd64/alpine:latest ${IMAGENAME}:${VERSION}
+IMAGETAG="amd64/alpine:${VERSION}"
+docker tag amd64/alpine:latest ${IMAGETAG}
+echo "Image:Tag created: ${IMAGETAG}"
