@@ -1,0 +1,27 @@
+services:
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: 9fQuwMfXKMDwh9xd2YN6
+      MINIO_ROOT_PASSWORD: SGPKltl5v4FgshdB6zem8EZNyfaw3IgvdH35L5Cm
+    command: server /data --console-address ":10010"
+    ports:
+      - 10010:10010
+    volumes:
+      - ~/.docker/sc_proj1/minio:/data
+  app: 
+    container_name: MedicalApp-backend-with-openapi2
+    build:
+      context: . 
+      dockerfile: Dockerfile 
+    ports:
+      - "9001:9001" 
+    volumes:
+      - .:/usr/src/app  
+      - /usr/src/app/node_modules 
+    environment:
+      - NODE_ENV=development  
+    restart: unless-stopped 
+
+volumes:
+  minio-data:
