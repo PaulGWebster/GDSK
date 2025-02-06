@@ -1,0 +1,333 @@
+swagger: '2.0'
+info:
+  version: 0.1.4
+  title: Worker Process API
+  description: API for worker processes to connect and send/receive JSON encoded objects.
+  termsOfService: http://example.com/terms/
+  contact:
+    name: API Support
+    email: support@example.com
+  license:
+    name: AGPL 3.0
+    url: https://www.gnu.org/licenses/agpl-3.0.html
+basePath: /api
+paths:
+  /echo:
+    post:
+      x-mojo-name: echo
+      parameters:
+        - in: body
+          name: body
+          schema:
+            type: object
+      responses:
+        '200':
+          description: Echo response
+          schema:
+            type: object
+  /worker:
+    post:
+      summary: Create a new worker process
+      description: Creates or accepts a new worker process that can send and receive JSON encoded objects.
+      operationId: createWorker
+      tags:
+        - Worker
+      parameters:
+        - in: body
+          name: worker
+          description: The name of the worker to create or accept
+          required: true
+          schema:
+            $ref: '#/definitions/Worker'
+      responses:
+        '201':
+          description: Worker created successfully
+          schema:
+            $ref: '#/definitions/Worker'
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+  /worker/{id}:
+    get:
+      summary: Get a worker process by ID
+      description: Retrieve details of a specific worker process.
+      operationId: getWorkerById
+      tags:
+        - Worker
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - name: querytype
+          in: query
+          required: false
+          type: string
+          description: Specifies what is being queried (e.g., "details", "status")
+      responses:
+        '200':
+          description: Worker details
+          schema:
+            $ref: '#/definitions/Worker'
+        '404':
+          description: Worker not found
+        '500':
+          description: Internal server error
+    put:
+      summary: Update a worker process
+      description: Update the details of an existing worker process.
+      operationId: updateWorker
+      tags:
+        - Worker
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+        - in: body
+          name: worker
+          description: The updated worker process details
+          required: true
+          schema:
+            $ref: '#/definitions/Worker'
+      responses:
+        '200':
+          description: Worker updated successfully
+          schema:
+            $ref: '#/definitions/Worker'
+        '400':
+          description: Invalid input
+        '404':
+          description: Worker not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: Delete a worker process
+      description: Deletes a specific worker process.
+      operationId: deleteWorker
+      tags:
+        - Worker
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '204':
+          description: Worker deleted successfully
+        '404':
+          description: Worker not found
+        '500':
+          description: Internal server error
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticates a user and returns a session token.
+      operationId: loginUser
+      tags:
+        - Authentication
+      parameters:
+        - in: body
+          name: credentials
+          description: User login credentials
+          required: true
+          schema:
+            $ref: '#/definitions/LoginCredentials'
+      responses:
+        '200':
+          description: Login successful
+          schema:
+            $ref: '#/definitions/Session'
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /auth/logout:
+    post:
+      summary: User logout
+      description: Logs out the current user and invalidates the session token.
+      operationId: logoutUser
+      tags:
+        - Authentication
+      responses:
+        '204':
+          description: Logout successful
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /media/find:
+    post:
+      summary: Find document by keywords
+      description: Returns a document ID based on provided keywords.
+      operationId: findDocument
+      tags:
+        - Media
+      parameters:
+        - in: body
+          name: keywords
+          description: Keywords to search for the document
+          required: true
+          schema:
+            type: object
+            properties:
+              keywords:
+                type: array
+                items:
+                  type: string
+      responses:
+        '200':
+          description: Document ID found
+          schema:
+            type: object
+            properties:
+              docid:
+                type: string
+        '400':
+          description: Invalid input
+        '500':
+          description: Internal server error
+  /media/tags:
+    get:
+      summary: Get tags by document ID
+      description: Returns tags associated with a specific document ID.
+      operationId: getTags
+      tags:
+        - Media
+      parameters:
+        - name: docid
+          in: query
+          description: Document ID to get tags for
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Tags retrieved successfully
+          schema:
+            type: object
+            properties:
+              tags:
+                type: array
+                items:
+                  type: string
+        '400':
+          description: Invalid input
+        '404':
+          description: Document not found
+        '500':
+          description: Internal server error
+  /media/filename:
+    post:
+      summary: Get filename by document ID
+      description: Returns the filename associated with a specific document ID.
+      operationId: getFilename
+      tags:
+        - Media
+      parameters:
+        - in: body
+          name: docid
+          description: Document ID to get filename for
+          required: true
+          schema:
+            type: object
+            properties:
+              docid:
+                type: string
+      responses:
+        '200':
+          description: Filename retrieved successfully
+          schema:
+            type: object
+            properties:
+              filename:
+                type: string
+        '400':
+          description: Invalid input
+        '404':
+          description: Document not found
+        '500':
+          description: Internal server error
+  /user/{id}:
+    get:
+      summary: Get user profile by ID
+      description: Retrieve the profile of a specific user.
+      operationId: getUserById
+      tags:
+        - User
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+      responses:
+        '200':
+          description: User profile
+          schema:
+            $ref: '#/definitions/UserProfile'
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error
+definitions:
+  Worker:
+    type: object
+    required:
+      - id
+      - name
+      - status
+    properties:
+      id:
+        type: string
+        description: Unique identifier for the worker process
+      name:
+        type: string
+        description: Name of the worker process
+      status:
+        type: string
+        description: Current status of the worker process
+        enum:
+          - active
+          - inactive
+          - paused
+  LoginCredentials:
+    type: object
+    required:
+      - username
+      - password
+    properties:
+      username:
+        type: string
+        description: Username for logging in
+      password:
+        type: string
+        description: Password for logging in
+  Session:
+    type: object
+    properties:
+      token:
+        type: string
+        description: Session token
+  UserProfile:
+    type: object
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      email:
+        type: string
+      created_at:
+        type: string
+        format: date-time
+  Error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string

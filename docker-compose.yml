@@ -10,10 +10,10 @@ services:
     volumes:
       - ~/.docker/sc_proj1/minio:/data
   app: 
-    container_name: MedicalApp-backend-with-openapi2
+    container_name: nodeapp-with-openapi2
     build:
       context: . 
-      dockerfile: Dockerfile 
+      dockerfile: ./docker/sources/minio/Dockerfile 
     ports:
       - "9001:9001" 
     volumes:
