@@ -1,5 +1,4 @@
 FROM amd64/alpine:3.21.2 AS base
-#FROM node:latest
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
