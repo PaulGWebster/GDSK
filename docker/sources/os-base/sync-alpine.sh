@@ -60,3 +60,5 @@ IMAGENAME=$(echo ${LATESTIMAGE} | cut -d ':' -f 1)
 IMAGETAG="amd64/alpine:${VERSION}"
 docker tag amd64/alpine:latest ${IMAGETAG}
 echo "Image:Tag created: ${IMAGETAG}"
+
+echo "${IMAGETAG}" > latest
