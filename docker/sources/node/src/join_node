@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Check if the file argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <base_filename>"
+    exit 1
+fi
+
+# Base filename to be reassembled
+BASE_FILE=$1
+
+# Directory containing the fragments
+FRAGMENTS_DIR="fragments"
+
+# Find all fragment files and concatenate them into the original file
+cat "$FRAGMENTS_DIR/$BASE_FILE".* > "$BASE_FILE"
+
+# Check if the reassembly was successful
+if [ $? -eq 0 ]; then
+    echo "File reassembled successfully: $BASE_FILE"
+else
+    echo "Error occurred during file reassembly."
+fi
