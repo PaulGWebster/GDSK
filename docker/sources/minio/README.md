@@ -63,20 +63,6 @@ Updating symlink to the latest version
 Done
 ```
 
-## Result
-
-```
-$ ls -la
-total 153724
-drwxrwxr-x 2 pwebster pwebster      4096 Feb  2 20:18 .
-drwxrwxr-x 4 pwebster pwebster      4096 Feb  2 18:38 ..
--rwxrwxr-x 1 pwebster pwebster      1169 Feb  2 20:18 fetch_minio.sh
--rwxrwxr-x 1 pwebster pwebster 117088408 Feb  2 20:18 minio
-lrwxrwxrwx 1 pwebster pwebster        41 Feb  2 20:18 minio-latest.tar.gz -> minio-RELEASE.2025-01-20T14-49-07Z.tar.gz
--rw-rw-r-- 1 pwebster pwebster  40301974 Feb  2 20:18 minio-RELEASE.2025-01-20T14-49-07Z.tar.gz
--rw-rw-r-- 1 pwebster pwebster      1187 Feb  2 20:16 README.md
-```
-
 ## License
 
 This project is licensed under the AGPL-3.0 License.
