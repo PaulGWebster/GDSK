@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+//datasource db {
+//  provider = "sqlite"
+//  url      = env("DATABASE_URL")
+//}
+
+
+// Models below is not certain can be changed with times.
+// I migrated that models right now. If it changes some content in api may change.
+// If this case happens. That won't be issue to update apis. 
+// User Model
+model User {
+  id          Int      @id @default(autoincrement()) 
+  Email       String   @unique
+  Name        String
+  Password    String
+  UserType    String
+
+  CreationTime DateTime @default(now())  // Auto-sets creation time
+  UpdateTime   DateTime? @updatedAt      // Auto-updates on modification
+  DeleteTime   DateTime?
+
+  // Relation: One User can have many Login records
+  logins Login[]
+}
+
+model Login {
+  id          Int      @id @default(autoincrement())
+  UserId      Int      // Foreign Key
+  LoginTime   DateTime
+  LogoutTime  DateTime?
+  AuthCookie  String
+
+  // Relation: Many Login records belong to One User
+  user        User     @relation(fields: [UserId], references: [id])
+}
+ 
+// worker
+model Worker{
+      id    Int     @id @default(autoincrement())
+      WorkerName String
+      WorkerType String
+      WorkerStatus String?
+      CreationTime   DateTime @default(now())  
+      UpdateTime     DateTime? @updatedAt     
+      DeleteTime     DateTime?
+}
+
+// Media model
+model Media {
+    id              Int             @id @default(autoincrement())
+    MediaName      String
+    MediaType      String?
+    MediaExtension  String?
+    MediaStatus     String?
+    CreationTime    DateTime        @default(now()) 
+    UpdateTime      DateTime?       @updatedAt        
+    DeleteTime      DateTime?
+    MediaTags       MediaTags[]      @relation("MediaMediaTags") // Define relation to MediaTags
+    MediaKeywords   MediaKeywords[]   @relation("MediaMediaKeywords") // Define relation to MediaKeywords
+}
+
+// MediaTags model
+model MediaTags {
+    id          Int     @id @default(autoincrement())
+    TagName     String 
+    mediaId     Int     
+    media       Media   @relation("MediaMediaTags", fields: [mediaId], references: [id]) // Define relation back to Media
+}
+
+// MediaKeywords model
+model MediaKeywords {
+    id          Int     @id @default(autoincrement())
+    Keywords    String 
+    mediaId     Int     
+    media       Media   @relation("MediaMediaKeywords", fields: [mediaId], references: [id]) // Define relation back to Media
+}
+
+
