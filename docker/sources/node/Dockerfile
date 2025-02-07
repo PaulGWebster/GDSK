@@ -1,25 +1,50 @@
 FROM amd64/alpine:3.21.2 AS osbase
 
 RUN apk update \
-  && apk add build-base ccache ninja python3 musl-dev sudo linux-headers bash
+  && apk add build-base ninja python3 musl-dev sudo linux-headers bash shadow
 
-ADD src/v23.7.0.tar /build
+ADD src/v23.7.0.tar /build/src
 
 WORKDIR /build
 
+RUN mkdir node
 RUN chsh -s bash
 
-RUN cd "$(find . -mindepth 1 -maxdepth 1 -type d -print -quit)"  \
-  && mkdir -p ../node \
-  && ./configure --prefix=/build/node \
-  && export PATH="/usr/lib/ccache:$PATH" \
-  && export THREADCOUNT=$(nproc) \
-  && ccache --max-size=6G \
-  && make -j$THREADCOUNT \
-  && make install 
+RUN cd src/node* \
+  && ln -s $(pwd) /build/source
 
-#FROM amd64/alpine:3.21.2 AS nodebase
+WORKDIR /build/source
 
-#COPY --from=osbase /build/install /usr/
+RUN ./configure --prefix=/build/target
 
-CMD "sh"
+RUN make -j$(nproc)
+
+RUN make install
+
+RUN make clean
+
+FROM amd64/alpine:3.21.2 AS nodedeps
+
+RUN apk update && apk add libgcc libstdc++
+
+FROM nodedeps AS osextra
+
+RUN apk update && apk add bash shadow
+
+FROM amd64/alpine:3.21.2 AS nodethin
+
+RUN mkdir -p /app
+
+WORKDIR /app
+
+COPY --from=nodedeps / /
+COPY --from=osextra / /
+COPY --from=osbase /build/target/ /usr/
+
+RUN chsh -s bash
+
+FROM scratch AS nodefinal
+
+COPY --from=nodethin / /
+
+CMD "bash"
