@@ -1,3 +1,5 @@
+# Rewrite this entirely to so the same as os-base
+
 # Minio Fetch Script
 
 This script automates the process of fetching the latest Minio binary, verifying its checksum, and creating a versioned tarball. Additionally, it creates a symlink to the latest version of the Minio binary and outputs the version and checksum of the binary.
