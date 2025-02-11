@@ -64,3 +64,9 @@
     - **XML Files (XML)**: Java - Libraries like JAXB and DOM/SAX parsers are well-suited for XML processing.
     - **CSV Files (CSV)**: Python - Pandas provides excellent support for CSV file operations.
     - **Markdown Files (MD)**: JavaScript - Libraries like markdown-it make it easy to parse and manipulate Markdown content.
+
+## Latest progress
+* Minio is buildable from source
+* SQLite is integrated for metadata storage
+* Node is executable and rebased from milestone0
+* os-base is ready and equal to milestone0 so others may rely on it 
