@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Check if the file argument is provided
+if [ -z "$1" ]; then
+    echo "Usage: $0 <filename>"
+    exit 1
+fi
+
+# File to be processed
+FILE=$1
+
+# Directory to store fragments
+FRAGMENTS_DIR="fragments"
+
+# Create the fragments directory if it doesn't exist
+mkdir -p $FRAGMENTS_DIR
+
+# Split the file into 1MB fragments with 3-character suffixes, appending the suffix to the filename
+split -b 1m -a 3 "$FILE" "$FRAGMENTS_DIR/$FILE."
+
+# Check if the split was successful
+if [ $? -eq 0 ]; then
+    # Remove the original file
+    rm "$FILE"
+    echo "File split and original file removed successfully."
+else
+    echo "Error occurred during file split."
+fi
