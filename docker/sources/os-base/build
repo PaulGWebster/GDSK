@@ -1,0 +1,10 @@
+#!/bin/bash
+
+epoch=$(date +%s)
+tag="gdsk:${epoch}"
+
+echo "Building image: ${tag}"
+
+docker build -f Dockerfile -t ${tag} .
+docker tag ${tag} gdsk:osbase
+

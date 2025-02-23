@@ -1,0 +1,20 @@
+#!/bin/sh
+
+cd /build
+
+for dir in */ ; do
+    # Remove trailing slash from directory name
+    dir=${dir%/}
+    # Extract the base name before the first hyphen
+    linkname="${dir%%-*}"
+    # Only proceed if link name and directory name are not the same
+    if [ "$linkname" != "$dir" ]; then
+        # Check if the symbolic link already exists
+        if [ -L "$linkname" ]; then
+            echo "Symbolic link '$linkname' already exists. Skipping."
+        else
+            ln -s "$dir" "$linkname"
+            echo "Created symbolic link: $linkname -> $dir"
+        fi
+    fi
+done

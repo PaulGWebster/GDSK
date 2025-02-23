@@ -1,0 +1,11 @@
+# Define the build argument
+ARG BASE_IMAGE=scratch
+
+# Use the build argument in the FROM instruction
+FROM ${BASE_IMAGE}
+
+RUN apk update 
+RUN apk add --no-cache bash shadow build-base zlib-dev openssl-dev curl wget tar bzip2-dev xz-dev sqlite-dev readline-dev libffi-dev musl-dev 
+RUN chsh -s /bin/bash
+
+CMD ["bash"]
